@@ -45,19 +45,19 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
-            return new SuccesDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id), Messages.ProductList);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id), Messages.ProductList);
         }
 
         public IDataResult<Product> GetById(int productId)
         {
             var result = _productDal.Get(p => p.ProductId == productId);
-            return new SuccesDataResult<Product>(result,Messages.ProductList);
+            return new SuccessDataResult<Product>(result,Messages.ProductList);
         }
 
         public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
             var result= _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
-            return new SuccesDataResult<List<Product>>(result,Messages.ProductList);
+            return new SuccessDataResult<List<Product>>(result,Messages.ProductList);
         }
 
         public IDataResult<List<ProductDetailDto>> GetProductDetails()
@@ -67,7 +67,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<List<ProductDetailDto>>(Messages.MaintenanceTime);
             }
             var result = _productDal.GetProductDetails();
-            return new SuccesDataResult<List<ProductDetailDto>>(result,Messages.ProductList);
+            return new SuccessDataResult<List<ProductDetailDto>>(result,Messages.ProductList);
         }
     }
 }

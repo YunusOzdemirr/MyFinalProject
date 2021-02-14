@@ -9,7 +9,7 @@ namespace Core.Utilities.Results
     {
         //En basic Result bu herşey burdaki ikiliye göre dönüş yapıyor yani 
         //tüm classlar burdan implemente olmak zorunda
-        bool Succes { get; }
+        bool Success { get; }
         string Message { get; }
     }
 }

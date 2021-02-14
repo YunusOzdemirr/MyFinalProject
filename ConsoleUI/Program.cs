@@ -30,7 +30,7 @@ namespace ConsoleUI
         {
             ProductManager productManager = new ProductManager(new EfProductDal());
             var result = productManager.GetProductDetails();
-            if (result.Succes)
+            if (result.Success)
             {
                 foreach (var item in result.Data)
                 {
