@@ -20,19 +20,37 @@ namespace WebAPI.Controllers
     {
         //Loosely coupled
         //IoC Container -- Inversion of control
-        IProductDal _productDal;
+        IProductService _productService;
 
-        public ProductsController(IProductDal productDal)
+        public ProductsController(IProductService productService)
         {
-            _productDal = productDal;
+            _productService = productService;
         }
 
         [HttpGet]
-        public List<Product> Get() 
+        public IActionResult Get() 
         {
-            var result = _productDal.GetAll();
-             return result;
+            var result = _productService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
             //return new IDataResult<<List>Product>(result.Data, Messages.ProductList);
+        }
+
+        [HttpPost]
+        public IActionResult Post(Product product)
+        {
+            var result = _productService.Add(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
     }
 }
