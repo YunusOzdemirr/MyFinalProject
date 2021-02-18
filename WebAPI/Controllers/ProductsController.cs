@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult Add(Product product)
         {
             var result = _productService.Add(product);
