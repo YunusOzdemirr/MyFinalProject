@@ -4,6 +4,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -11,6 +12,7 @@ using Entities.Dtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -18,30 +20,38 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
+        ICategoryService _categoryService;
         //ILogger _logger;
 
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal,ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
             //  _logger = logger;
         }
-        //[ValidationAspect(typeof(ProductValidator))]
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //business codes
             //validation
             // _logger.Log();
+            //IResult yerine Result da gelebilir
+           IResult result =BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
+               CheckIfProductNameExistCorrect(product.ProductName), CheckIfCategoryCount());
 
+            if (result!=null)
+            {
+                return result;
+            }
+            else
+            {
+                _productDal.Add(product);
+                return new SuccessResult(Messages.ProductAdded);
+            }
             // ValidationTool.Validate(new ProductValidator(), product);
-
-            _productDal.Add(product);
-            return new SuccessResult(Messages.ProductAdded);
 
             //    _logger.Log();
             // return new ErrorResult(ex.ToString());
-
-
-
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -81,5 +91,44 @@ namespace Business.Concrete
             var result = _productDal.GetProductDetails();
             return new SuccessDataResult<List<ProductDetailDto>>(result, Messages.ProductList);
         }
+
+        [ValidationAspect(typeof(ProductValidator))]
+        public IResult Update(Product product)
+        {
+            if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
+            {
+                _productDal.Update(product);
+                return new SuccessResult(Messages.ProductAdded);
+            }
+            return new ErrorResult();
+        }
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
+        {
+            var result = _productDal.GetAll(p => p.CategoryId == categoryId);
+            if (result.Count > 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfProductNameExistCorrect(string productName)
+        {
+            var result = _productDal.GetAll(p => p.ProductName == productName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfCategoryCount()
+        {
+            var result = _categoryService.GetAll();
+            if (result.Count==15)
+            {
+                return new ErrorResult();
+            }
+            return new SuccessResult();
+        }
+        
     }
 }
