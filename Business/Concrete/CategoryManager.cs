@@ -28,5 +28,9 @@ namespace Business.Concrete
             var result = _categoryDal.Get(p => p.CategoryId == categoryId);
             return new SuccessDataResult<Category>(result);
         }
+        private IResult CheckIfCategoryLimitExceded()
+        {
+
+        }
     }
 }
