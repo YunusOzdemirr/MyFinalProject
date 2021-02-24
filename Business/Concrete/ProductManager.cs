@@ -123,9 +123,9 @@ namespace Business.Concrete
         private IResult CheckIfCategoryCount()
         {
             var result = _categoryService.GetAll();
-            if (result.Count==15)
+            if (result.Data.Count==15)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CategoryLimitExceded);
             }
             return new SuccessResult();
         }
