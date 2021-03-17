@@ -55,14 +55,14 @@ namespace Business.Concrete
             //    _logger.Log();
             // return new ErrorResult(ex.ToString());
         }
-
+        [CacheAspect]//key ,value
         public IDataResult<List<Product>> GetAll()
         {
             //İş kodları
-            if (DateTime.Now.Hour == 18)
-            {
-                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
-            }
+            //if (DateTime.Now.Hour == 18)
+            //{
+            //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            //}
             return new DataResult<List<Product>>(_productDal.GetAll(), true, Messages.ProductList);
 
         }
