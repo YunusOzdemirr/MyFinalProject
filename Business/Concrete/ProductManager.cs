@@ -3,6 +3,8 @@ using Business.BusinessAscpects.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -30,6 +32,8 @@ namespace Business.Concrete
             _categoryService = categoryService;
             //  _logger = logger;
         }
+
+        [CacheRemoveAspect("IProductService.Get")]
         [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
@@ -71,7 +75,7 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id), Messages.ProductList);
         }
-
+        [CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             var result = _productDal.Get(p => p.ProductId == productId);
@@ -93,7 +97,7 @@ namespace Business.Concrete
             var result = _productDal.GetProductDetails();
             return new SuccessDataResult<List<ProductDetailDto>>(result, Messages.ProductList);
         }
-
+        [CacheRemoveAspect("IProductService.Get")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Product product)
         {
@@ -131,6 +135,16 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
-        
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if (product.UnitPrice<10)
+            {
+                throw new Exception("");
+            }
+            Add(product);
+            return null;
+        }
     }
 }
