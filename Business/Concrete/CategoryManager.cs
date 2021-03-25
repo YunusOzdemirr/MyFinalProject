@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -28,6 +29,14 @@ namespace Business.Concrete
             var result = _categoryDal.Get(p => p.CategoryId == categoryId);
             return new SuccessDataResult<Category>(result);
         }
-      
+        public IResult Add(Category category)
+        {
+                _categoryDal.Add(category);
+                return new SuccessResult(Messages.ProductAdded);
+            // ValidationTool.Validate(new ProductValidator(), product);
+
+            //    _logger.Log();
+            // return new ErrorResult(ex.ToString());
+        }
     }
 }
