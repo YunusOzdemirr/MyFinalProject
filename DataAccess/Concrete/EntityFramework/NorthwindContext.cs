@@ -12,7 +12,8 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(LocalDB)\MSSQLLocalDB;Database=Northwind;Trusted_Connection=true");
+            //optionsBuilder.UseSqlServer(@"Server=(LocalDB)\MSSQLLocalDB;Database=Northwind;Trusted_Connection=true");
+            optionsBuilder.UseSqlServer(@"Data Source=<localhost>;Initial Catalog=Northwind; Encrypt=True");
         }
         public DbSet<Product> Products{ get; set; }
         public DbSet<Customer> Customers{ get; set; }

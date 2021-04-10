@@ -33,8 +33,8 @@ namespace Business.Concrete
             //  _logger = logger;
         }
 
-        [CacheRemoveAspect("IProductService.Get")]
-        [SecuredOperation("product.add,admin")]
+        //[CacheRemoveAspect("IProductService.Get")]
+        //[SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
