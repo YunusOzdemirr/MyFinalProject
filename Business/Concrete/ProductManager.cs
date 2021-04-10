@@ -42,14 +42,18 @@ namespace Business.Concrete
             //validation
             // _logger.Log();
             //IResult yerine Result da gelebilir
-           //IResult result =BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
-             //  CheckIfProductNameExistCorrect(product.ProductName), CheckIfCategoryCount());
+           IResult result =BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
+               CheckIfProductNameExistCorrect(product.ProductName), CheckIfCategoryCount());
 
-          
-            
+            if (result!=null)
+            {
+                return result;
+            }
+            else
+            {
                 _productDal.Add(product);
                 return new SuccessResult(Messages.ProductAdded);
-            
+            }
             // ValidationTool.Validate(new ProductValidator(), product);
 
             //    _logger.Log();
