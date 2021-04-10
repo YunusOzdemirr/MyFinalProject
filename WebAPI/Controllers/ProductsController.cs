@@ -40,6 +40,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
             //return new IDataResult<<List>Product>(result.Data, Messages.ProductList);
         }
+
         [HttpGet("GetById")]
         public IActionResult GetById(int id)
         {
@@ -70,7 +71,6 @@ namespace WebAPI.Controllers
         [HttpGet("GetByCategoryId")]
         public IActionResult GetByCategoryId(int categoryId)
         {
-
             var result = _productService.GetAllByCategoryId(categoryId);
             if (result.Success)
             {
